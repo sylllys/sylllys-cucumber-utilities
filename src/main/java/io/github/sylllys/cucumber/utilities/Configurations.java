@@ -22,7 +22,8 @@ public class Configurations {
     loadData("");
 
     if (System.getProperty(HardCodes.CONFIG_DIRECTORIES_KEYWORD) != null) {
-      for (String configDirs : System.getProperty(HardCodes.CONFIG_DIRECTORIES_KEYWORD).split(",")) {
+      for (String configDirs : System.getProperty(HardCodes.CONFIG_DIRECTORIES_KEYWORD)
+          .split(",")) {
 
         loadData(configDirs + "/");
       }
@@ -56,7 +57,7 @@ public class Configurations {
 
   }
 
-  static void loadBackup() throws IOException {
+  public static void loadBackup() throws IOException {
     if (dataLoaded) {
       dict = (Properties) dictBackUp.clone();
     } else {
@@ -75,7 +76,7 @@ public class Configurations {
       throw new Exception("Cannot update, dictionary does not have key:" + key);
     }
 
-    return dict.setProperty(key, value);
+    return dict.setProperty(key, DataMiner.refactorAutoGeneratorExpressions(value));
   }
 
   public static String getEnvironmentVariable(String key) throws IOException {
