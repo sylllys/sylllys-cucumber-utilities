@@ -30,8 +30,6 @@ public class ApplicationTestEndpoint extends TestEndpoint {
   @Override
   public void constructRequest() throws Exception {
 
-    initializePayload();
-
     super.constructRequest(endPointDetails.getUrl(), endPointDetails.getHeaders(),
         endPointDetails.getParameters(), endPointDetails.getBody());
 

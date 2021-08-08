@@ -48,12 +48,30 @@ public class TestEndPointDetails {
     this.parameters = parameters;
   }
 
+  public void setParameter(String key, String value) {
+
+    if (this.parameters == null) {
+      this.parameters = new HashMap<String, String>();
+    }
+
+    this.parameters.put(key, value);
+  }
+
   public HashMap<String, String> getHeaders() {
     return headers;
   }
 
   public void setHeaders(HashMap<String, String> headers) {
     this.headers = headers;
+  }
+
+  public void setHeader(String key, String value) {
+
+    if (this.headers == null) {
+      this.headers = new HashMap<String, String>();
+    }
+
+    this.headers.put(key, value);
   }
 
   public HashMap<String, String> getCookies() {

@@ -40,44 +40,18 @@ public class TestEndPointFactory {
     return testEndPointDetails;
   }
 
-  public static HashMap<String, String> get(String key, HashMap<String, String> customData) {
+  public static String editBody(String body, String[] bodyEdit) {
 
-    HashMap<String, String> newData = new HashMap<String, String>();
+    String tupleName = bodyEdit[0];
+    String tupleValue = bodyEdit[1];
 
-    if (customData.containsKey(key)) {
-      String regex = "(?<!\\\\)" + Pattern.quote(",");
-      for (String header : customData.get(key).split(regex)) {
-        if (header.trim().length() > 0) {
-          newData.put(header.split(":")[0], header.split(":")[1].replace("\\,", ","));
-        }
-      }
-    }
+    try {
+      JsonPath.using(configurationDefault).parse(body).read(tupleName).toString();
 
-    if (newData.size() == 0) {
-      newData = null;
-    }
+      body = setBody(body, tupleName, tupleValue);
+    } catch (com.jayway.jsonpath.PathNotFoundException e) {
 
-    return newData;
-
-  }
-
-  public static String editBody(String body, HashMap<String, String> customData) {
-
-    final String key = "BODY.EDIT(S)";
-    String regex = "(?<!\\\\)" + Pattern.quote(",");
-
-    for (String bodyEdit : customData.get(key).split(regex)) {
-      String tupleName = bodyEdit.split(":", 2)[0];
-      String tupleValue = bodyEdit.split(":", 2)[1];
-
-      try {
-        JsonPath.using(configurationDefault).parse(body).read(tupleName).toString();
-
-        body = setBody(body, tupleName, tupleValue.replace("\\,", ","));
-      } catch (com.jayway.jsonpath.PathNotFoundException e) {
-
-        body = addBody(body, tupleName, tupleValue.replace("\\,", ","));
-      }
+      body = addBody(body, tupleName, tupleValue);
     }
 
     return body;
@@ -117,6 +91,7 @@ public class TestEndPointFactory {
           .singletonMap(newField, value)).jsonString();
     }
 
+    body = body.replaceAll("\"\\{\\s{1,}\\}\"", "{}").replaceAll("\"\\[\\s{1,}\\]\"", "[]");
     return body;
   }
 }

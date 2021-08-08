@@ -56,7 +56,7 @@ public class DataMiner {
 
   }
 
-  public static String refactorKeywordExpressions(String rawData) throws Exception {
+  public static String refactorStaticKeywordExpressions(String rawData) throws Exception {
 
     if (rawData == null) {
       return null;
@@ -140,18 +140,22 @@ public class DataMiner {
           rawData = rawData.replace("{" + sysEnvVKeyWithColon + sysKeyName + "}", sysval);
         }
       }
+    } while (!isStaticDataRefactored(rawData));
 
+    return rawData;
+  }
+
+  public static String refactorGlobalKeywordExpressions(String rawData) throws Exception {
+
+    if (rawData == null) {
+      return null;
+    }
+
+    do {
       for (int i = 0; i < 5; i++) {
         for (String key : GlobalVariables.hashmap.keySet()) {
-          Object glbl = GlobalVariables.forceGet(key);
-          if (glbl == null) {
-            rawData = rawData.replace("{" + HardCodes.GLOBAL_KEYWORD + ":" + key + "}", "");
-          } else {
-            if (glbl.getClass().getName().equals(String.class.getName())) {
-              rawData = rawData.replace("{" + HardCodes.GLOBAL_KEYWORD + ":" + key + "}",
-                  glbl.toString());
-            }
-          }
+          String glbl = GlobalVariables.get(key);
+          rawData = rawData.replace("{" + HardCodes.GLOBAL_KEYWORD + ":" + key + "}", glbl);
         }
       }
 
@@ -160,8 +164,22 @@ public class DataMiner {
             "Global variable(s) did not refactored as expected. Here is the erroneous data:"
                 + rawData);
       }
-    } while (!DataMiner.isDataRefactored(rawData));
+    } while (!isDynamicDataRefactored(rawData));
 
+    return rawData;
+  }
+
+  public static String refactorKeywordExpressions(String rawData) throws Exception {
+
+    if (rawData == null) {
+      return null;
+    }
+
+    do {
+      rawData = refactorStaticKeywordExpressions(rawData);
+      rawData = refactorGlobalKeywordExpressions(rawData);
+
+    } while (!isDataRefactored(rawData));
     return rawData;
   }
 
@@ -332,10 +350,24 @@ public class DataMiner {
   static boolean isDataRefactored(String data) {
 
     return data == null ? true
+        : isStaticDataRefactored(data) && isDynamicDataRefactored(data);
+
+  }
+
+  static boolean isStaticDataRefactored(String data) {
+
+    return data == null ? true
         : !data.matches("(?s).*\\{" + HardCodes.ENVIRONMENT_KEYWORD + ":.*\\}.*|(?s).*\\{"
             + HardCodes.FILE_KEYWORD + ":.*\\}.*|(?s).*\\{" + HardCodes.DICTIONARY_KEYWORD
             + ":.*\\}.*|(?s).*\\{" + HardCodes.SYSPROP_KEYWORD + ":.*\\}.*|(?s).*\\{"
-            + HardCodes.SYSENVV_KEYWORD + ":.*\\}.*|(?s).*\\{"
+            + HardCodes.SYSENVV_KEYWORD + ":.*\\}.*");
+
+  }
+
+  static boolean isDynamicDataRefactored(String data) {
+
+    return data == null ? true
+        : !data.matches("(?s).*\\{"
             + HardCodes.GLOBAL_KEYWORD + ":.*\\}.*");
 
   }
