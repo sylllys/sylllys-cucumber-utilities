@@ -3,20 +3,20 @@ package io.github.sylllys.cucumber.bluePrints;
 import io.github.sylllys.cucumber.utilities.DataMiner;
 import io.github.sylllys.cucumber.utilities.HardCodes;
 import io.restassured.RestAssured;
+import io.restassured.http.Method;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import java.io.File;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class TestEndpoint {
 
-  protected String endPointURL = null;
+  protected URL endPointURL = null;
   protected Response response = null;
-  public static Response responseOfLastSentRequest = null;
   protected RequestSpecification request = null;
   protected Map<String, String> urlQueryParameters = null;
-
 
   public Response getResponse() {
     return this.response;
@@ -31,7 +31,7 @@ public abstract class TestEndpoint {
 
     request = RestAssured.given();
 
-    endPointURL = DataMiner.refactor(url);
+    endPointURL = new URL(DataMiner.refactor(url));
 
     if (queryParams != null) {
       for (String key : queryParams.keySet()) {
@@ -86,6 +86,7 @@ public abstract class TestEndpoint {
           }
         }
       } else {
+
         request.body(DataMiner.refactor(body.toString()));
       }
     }
@@ -93,33 +94,11 @@ public abstract class TestEndpoint {
 
   public abstract void sendRequest() throws Exception;
 
-  protected void sendRequest(HttpRequestActions action) throws Exception {
+  protected void sendRequest(Method httpMethod) throws Exception {
 
-    switch (action) {
-      case GET:
-        response = request.get(endPointURL);
-        break;
-      case PUT:
-        response = request.put(endPointURL);
-        break;
-      case POST:
-        response = request.post(endPointURL);
-        break;
-      case DELETE:
-        response = request.delete(endPointURL);
-        break;
-      case PATCH:
-        response = request.patch(endPointURL);
-        break;
-      case HEAD:
-        response = request.head(endPointURL);
-        break;
-      case OPTIONS:
-        response = request.options(endPointURL);
-        break;
-    }
+    response = request.request(httpMethod, endPointURL);
 
-    responseOfLastSentRequest = response;
+    PreviousTestEndpoint.details(request, response, endPointURL, httpMethod);
 
   }
 

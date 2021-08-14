@@ -63,7 +63,7 @@ public class HTTPApplicationService {
           .startsWith(HardCodes.REQUEST_BODY_EDIT_KEYWORD.toUpperCase())) {
         testEndPointDetails.setBody(
             TestEndPointFactory
-                .editBody(DataMiner.refactor(testEndPointDetails.getBody()),
+                .editBody(DataMiner.refactorKeywordExpressions(testEndPointDetails.getBody()),
                     requestDetail.substring(HardCodes.REQUEST_BODY_EDIT_KEYWORD.length())
                         .split(":", 2)));
       }
@@ -71,5 +71,6 @@ public class HTTPApplicationService {
 
     applicationTestEndpoint.constructRequest();
     applicationTestEndpoint.sendRequest();
+
   }
 }

@@ -1,10 +1,11 @@
 package io.github.sylllys.cucumber.endPoints;
 
-import io.github.sylllys.cucumber.bluePrints.HttpRequestActions;
 import io.github.sylllys.cucumber.bluePrints.TestEndpoint;
 import io.github.sylllys.cucumber.utilities.GlobalVariables;
 import io.github.sylllys.cucumber.utilities.JSONFactory;
 import io.restassured.http.Cookie;
+import io.restassured.http.Method;
+import io.restassured.response.Response;
 
 public class ApplicationTestEndpoint extends TestEndpoint {
 
@@ -46,7 +47,7 @@ public class ApplicationTestEndpoint extends TestEndpoint {
   @Override
   public void sendRequest() throws Exception {
 
-    super.sendRequest(HttpRequestActions.valueOf(endPointDetails.getMethod()));
+    super.sendRequest(Method.valueOf(endPointDetails.getMethod()));
 
     if (endPointDetails.getSave() != null) {
       for (Integer statusCode : endPointDetails.getSave().keySet()) {

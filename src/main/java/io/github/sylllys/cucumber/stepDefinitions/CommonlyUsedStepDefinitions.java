@@ -5,11 +5,10 @@ import static org.junit.Assert.assertTrue;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
-import io.github.sylllys.cucumber.endPoints.ApplicationTestEndpoint;
-import io.github.sylllys.cucumber.utilities.Configurations;
 import io.github.sylllys.cucumber.utilities.DataMiner;
 import io.github.sylllys.cucumber.utilities.GlobalVariables;
 import io.github.sylllys.cucumber.utilities.JSONFactory;
+import io.github.sylllys.cucumber.bluePrints.PreviousTestEndpoint;
 import io.restassured.response.Response;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -26,15 +25,10 @@ public class CommonlyUsedStepDefinitions {
     GlobalVariables.put(key, value);
   }
 
-  @Given("^\\{dict:(.*)\\} as (.*)$")
-  public void setDictionary(String key, String value) throws Exception {
-    Configurations.setDictionaryVariable(key, value);
-  }
-
   @Then("^verify response code is (.*)$")
   public void verifyResponseCode(int expectedResponseCode) throws Exception {
 
-    Response response = ApplicationTestEndpoint.responseOfLastSentRequest;
+    Response response = PreviousTestEndpoint.response;
 
     assertTrue("reponse code is not as expected:" + expectedResponseCode + ", actual:"
         + response.getStatusCode(), response.getStatusCode() == expectedResponseCode);
@@ -42,9 +36,9 @@ public class CommonlyUsedStepDefinitions {
   }
 
   @Then("^verify response body is JSON with tuple\\(s\\):(.*)$")
-  public void verifyResponseJSONBody(String tuples) throws Exception {
+  public void verifyJSONResponseBody(String tuples) throws Exception {
 
-    Response response = ApplicationTestEndpoint.responseOfLastSentRequest;
+    Response response = PreviousTestEndpoint.response;
 
     String regex = "(?<!\\\\)" + Pattern.quote(",");
 
@@ -74,13 +68,13 @@ public class CommonlyUsedStepDefinitions {
   }
 
   @Then("^verify response body is JSON with tuple\\(s\\)$")
-  public void verifyResponseJSONBody(Map<String, String> tuples) throws Exception {
+  public void verifyJSONResponseBody(Map<String, String> tuples) throws Exception {
 
-    Response response = ApplicationTestEndpoint.responseOfLastSentRequest;
-    verifyJSONBody(tuples, response.getBody().asString());
+    Response response = PreviousTestEndpoint.response;
+    verifyJSONResponseBody(tuples, response.getBody().asString());
   }
 
-  private void verifyJSONBody(Map<String, String> tuples, String body) throws Exception {
+  private void verifyJSONResponseBody(Map<String, String> tuples, String body) throws Exception {
 
     for (String key : tuples.keySet()) {
 
@@ -111,11 +105,11 @@ public class CommonlyUsedStepDefinitions {
   }
 
   @Then("^verify response body is text with content (.*)$")
-  public void verifyResponseTextBody(String contentList) throws Exception {
+  public void verifyTextResponseBody(String contentList) throws Exception {
 
     String delim = "(?<!\\\\)" + Pattern.quote(",");
 
-    Response response = ApplicationTestEndpoint.responseOfLastSentRequest;
+    Response response = PreviousTestEndpoint.response;
     String responseContent = response.getBody().asString().trim();
 
     responseContent = responseContent
@@ -145,5 +139,23 @@ public class CommonlyUsedStepDefinitions {
   @Then("^wait for (\\d+) seconds$")
   public void waitForAccruals(int waitTime) throws Exception {
     Thread.sleep(1000 * waitTime);
+  }
+
+  @Then("^resend request for (\\d+) time\\(s\\), until JSON response body has")
+  public void resendRequest(int times, Map<String, String> tuples) throws Exception {
+
+    do {
+      try {
+        verifyJSONResponseBody(tuples);
+        return;
+      } catch (java.lang.AssertionError e) {
+        Thread.sleep(5 * 1000);
+        PreviousTestEndpoint.sendRequest();
+        times--;
+      }
+    } while (times > 0);
+
+    throw new Exception(
+        "response is not as expected even after resending the request for multiple time(s)");
   }
 }

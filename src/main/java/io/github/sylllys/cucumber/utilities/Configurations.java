@@ -5,21 +5,18 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /*
- * This class contains code to read environment configuration file based on system variable:execEnv,
- * if exists. And also code to read dictionary.properties file, if exists.
+ * This class contains code to read environment configuration file based on system variable:env, if exists
+ * And also code to read global.properties file, if exists.
  *
  * Also, it contain functions to retrieve the key value pairs stored in the above mentioned files.
  */
 public class Configurations {
 
   static Properties env = new Properties();
-  static Properties dict = new Properties();
-  static Properties dictBackUp = null;
+  static Properties globalProperties = new Properties();
   private static boolean dataLoaded = false;
 
   private static void loadData() throws IOException {
-
-    loadData("");
 
     if (System.getProperty(HardCodes.CONFIG_DIRECTORIES_KEYWORD) != null) {
       for (String configDirs : System.getProperty(HardCodes.CONFIG_DIRECTORIES_KEYWORD)
@@ -28,8 +25,6 @@ public class Configurations {
         loadData(configDirs + "/");
       }
     }
-
-    dictBackUp = (Properties) dict.clone();
 
     dataLoaded = true;
   }
@@ -47,36 +42,24 @@ public class Configurations {
       }
     }
 
-    InputStream dict = Configurations.class.getResourceAsStream(
-        HardCodes.configurationDirectoryName + configDir + HardCodes.dictionaryFileName);
+    InputStream global = Configurations.class.getResourceAsStream(
+        HardCodes.configurationDirectoryName + configDir + HardCodes.globalVariablesFileName);
 
-    if (dict != null) {
-      Configurations.dict.load(dict);
+    if (global != null) {
+      Configurations.globalProperties.load(global);
     }
 
 
   }
 
   public static void loadBackup() throws IOException {
-    if (dataLoaded) {
-      dict = (Properties) dictBackUp.clone();
-    } else {
+    if (!dataLoaded) {
       loadData();
     }
-  }
 
-  public static String getDictionaryVariable(String key) throws IOException {
+    globalProperties.stringPropertyNames()
+        .forEach(key -> GlobalVariables.hashmap.put(key, globalProperties.getProperty(key).replaceAll("\\\\", "\\\\\\\\")));
 
-    return dict.getProperty(key);
-  }
-
-  public static Object setDictionaryVariable(String key, String value) throws Exception {
-
-    if (!dict.containsKey(key)) {
-      throw new Exception("Cannot update, dictionary does not have key:" + key);
-    }
-
-    return dict.setProperty(key, DataMiner.refactorAutoGeneratorExpressions(value));
   }
 
   public static String getEnvironmentVariable(String key) throws IOException {
@@ -87,10 +70,5 @@ public class Configurations {
   static Properties getEnv() throws IOException {
 
     return env;
-  }
-
-  static Properties getDictionary() throws IOException {
-
-    return dict;
   }
 }
