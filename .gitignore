@@ -1,16 +1,52 @@
-# Compiled class file
-*.class
+# JetBrains IDEs
+.idea
+*.iml
+atlassian-ide-plugin.xml
 
-# Log file
+# Eclipse IDE
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.classpath
+.recommenders
+
+# Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+
+# Visual Studio
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Java
+*.class
+bin
+target
+temp-output
+build/
+.gradle
+.mvn/*
+LOG_FILE_IS_UNDEFINED
+.springBeans
+.checkstyle
+
+# Other
 *.log
 
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
+# Package Files
 *.jar
 *.war
 *.nar
@@ -19,5 +55,11 @@
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+# Operating System Files
+*.DS_Store
+Thumbs.db
+
+# Repo specific
+*-local.sh
+*-local.bat
+.project
