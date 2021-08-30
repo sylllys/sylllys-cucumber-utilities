@@ -7,7 +7,34 @@
   <groupId>io.github.sylllys</groupId>
   <artifactId>sylllys-cucumber-utilities</artifactId>
   <version>0.0.1</version>
+  <packaging>jar</packaging>
+  
   <name>sylllys-cucumber-utilities</name>
+
+  <description>utilities to easily write test suites for API testing</description>
+  <url>https://github.com/sylllys/sylllys-cucumber-utilities</url>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>author-of-sylllys</name>
+      <email>project.sylllys@gmail.com</email>
+      <organization>SYLLLYS</organization>
+      <organizationUrl>https://sylllys.github.io</organizationUrl>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git://github.com/sylllys/sylllys-cucumber-utilities.git</connection>
+    <developerConnection>scm:git:ssh://github.com:sylllys/sylllys-cucumber-utilities.git</developerConnection>
+    <url>https://github.com/sylllys/sylllys-cucumber-utilities/tree/main</url>
+  </scm>
 
   <distributionManagement>
     <snapshotRepository>
