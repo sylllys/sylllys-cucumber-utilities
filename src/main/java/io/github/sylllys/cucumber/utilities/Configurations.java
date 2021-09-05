@@ -1,5 +1,7 @@
 package io.github.sylllys.cucumber.utilities;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -18,24 +20,29 @@ public class Configurations {
 
   private static void loadData() throws IOException {
 
-    if (System.getProperty(HardCodes.CONFIG_DIRECTORIES_KEYWORD) != null) {
-      for (String configDirs : System.getProperty(HardCodes.CONFIG_DIRECTORIES_KEYWORD)
-          .split(",")) {
+    if (System.getProperty(HardCodes.SUITE_CONFIG_DETAILS_KEYWORD) != null) {
 
-        loadData(configDirs + "/");
+      ObjectMapper mapper = new ObjectMapper();
+      String suiteConfigProperty = System.getProperty(HardCodes.SUITE_CONFIG_DETAILS_KEYWORD);
+      suiteConfigProperty = (suiteConfigProperty.startsWith("'") || suiteConfigProperty.startsWith("\"")) ? suiteConfigProperty.substring(1, suiteConfigProperty.length()-1) : suiteConfigProperty;
+      suiteConfigProperty = suiteConfigProperty.replaceAll("([\\w]+)[ ]*:[ ]*([\\w]+)", "\"$1\":\"$2\"");
+      SuiteConfigDetails[] suiteConfigDetails = mapper.readValue(suiteConfigProperty , SuiteConfigDetails[].class);
+
+      for (SuiteConfigDetails suiteConfigDetail : suiteConfigDetails) {
+
+        loadData(suiteConfigDetail.getDir() + "/", suiteConfigDetail.getEnv());
       }
     }
 
     dataLoaded = true;
   }
 
-  private static void loadData(String configDir) throws IOException {
+  private static void loadData(String configDir, String envName) throws IOException {
 
-    if (HardCodes.getExecutionEnvironment() != null
-        && !"none".equalsIgnoreCase(HardCodes.getExecutionEnvironment())) {
+    if (!"none".equalsIgnoreCase(envName)) {
 
       InputStream env = Configurations.class.getResourceAsStream(
-          HardCodes.configurationDirectoryName + configDir + HardCodes.getExecutionEnvironment()
+          HardCodes.configurationDirectoryName + configDir + envName
               + ".properties");
       if (env != null) {
         Configurations.env.load(env);

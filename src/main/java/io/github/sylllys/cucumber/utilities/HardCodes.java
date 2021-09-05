@@ -16,8 +16,7 @@ public class HardCodes {
   public static final String SYSPROP_KEYWORD = "sysprop";
   public static final String SYSENVV_KEYWORD = "sysenvv";
   public static final String AUTO_GENERATOR_KEYWORD = "autogen";
-  public static final String CONFIG_DIRECTORIES_KEYWORD = "suite.config.dirs";
-
+  public static final String SUITE_CONFIG_DETAILS_KEYWORD = "suite.config.details";
 
   public static final String YAML_PATH_KEYWORD = "details ";
   public static final String REQUEST_HEADER_KEYWORD = "header ";
@@ -25,7 +24,4 @@ public class HardCodes {
   public static final String REQUEST_BODY_KEYWORD = "body ";
   public static final String REQUEST_BODY_EDIT_KEYWORD = "body.edit ";
 
-  public static String getExecutionEnvironment() {
-    return System.getProperty(ENVIRONMENT_KEYWORD);
-  }
 }
