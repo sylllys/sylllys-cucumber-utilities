@@ -1,8 +1,10 @@
 package io.github.sylllys.cucumber.bluePrints;
 
+import io.github.sylllys.cucumber.hooks.UtilityHooks;
 import io.github.sylllys.cucumber.utilities.DataMiner;
 import io.github.sylllys.cucumber.utilities.HardCodes;
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import io.restassured.http.Method;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -30,6 +32,7 @@ public abstract class TestEndpoint {
       HashMap<String, String> queryParams, Object body) throws Exception {
 
     request = RestAssured.given();
+    request.given().filter(UtilityHooks.getLogFilter()).contentType(ContentType.JSON);
 
     endPointURL = new URL(DataMiner.refactor(url));
 
@@ -97,6 +100,8 @@ public abstract class TestEndpoint {
   protected void sendRequest(Method httpMethod) throws Exception {
 
     response = request.request(httpMethod, endPointURL);
+
+    UtilityHooks.extractAPIDetailsIntoLogs();
 
     PreviousTestEndpoint.details(request, response, endPointURL, httpMethod);
 

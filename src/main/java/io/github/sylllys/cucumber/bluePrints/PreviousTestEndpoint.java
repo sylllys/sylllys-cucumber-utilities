@@ -1,5 +1,6 @@
 package io.github.sylllys.cucumber.bluePrints;
 
+import io.github.sylllys.cucumber.hooks.UtilityHooks;
 import io.restassured.http.Method;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -23,6 +24,8 @@ public class PreviousTestEndpoint {
   public static void sendRequest() throws Exception {
 
     response = request.request(httpMethod, url);
+
+    UtilityHooks.extractAPIDetailsIntoLogs();
   }
 
 
