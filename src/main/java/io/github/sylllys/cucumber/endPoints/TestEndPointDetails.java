@@ -8,6 +8,7 @@ public class TestEndPointDetails {
   private String name;
   private String url;
   private String method;
+  private HashMap<String, String> path_variables;
   private HashMap<String, String> parameters;
   private HashMap<String, String> headers;
   private HashMap<String, String> cookies;
@@ -38,6 +39,24 @@ public class TestEndPointDetails {
 
   public void setMethod(String method) {
     this.method = method;
+  }
+
+
+  public HashMap<String, String> getPath_variables() {
+    return path_variables;
+  }
+
+  public void setPath_variables(HashMap<String, String> path_variables) {
+    this.path_variables = path_variables;
+  }
+
+  public void setPathVariable(String key, String value) {
+
+    if (this.path_variables == null) {
+      this.path_variables = new HashMap<String, String>();
+    }
+
+    this.path_variables.put(key, value);
   }
 
   public HashMap<String, String> getParameters() {

@@ -17,13 +17,7 @@ import org.apache.commons.lang3.StringUtils;
  * {file:path} will be replaced with the content of the file with the given path placed under ./src/test/resources/configurations folder
  * {global:key} will be replaced with the value mapped to key from the global hashmap
  *
- * and many more data generators, {NEW_LINE} will be replaced with a new line separator {NULL} will
- * be replaced with null {GENERATE_TXT#} will be replaced with a random text of length #
- * {GENERATE_NUM#} will be replaced with a random number of length # {TIMESTAMP_format} will be
- * replaced with the current time stamp in the requested format {CURRENTDATE_format_MORE#} will be
- * replaced with the current time stamp after adding # number of days, in the requested format
- * {CURRENTDATE_format_LESS#} will be replaced with the current time stamp after subtracting #
- * number of days, in the requested format
+ * and many more data generators
  */
 public class DataMiner {
 

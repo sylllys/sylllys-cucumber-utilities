@@ -28,13 +28,21 @@ public abstract class TestEndpoint {
 
   public abstract void constructRequest() throws Exception;
 
-  protected void constructRequest(String url, HashMap<String, String> requestHeaders,
+  protected void constructRequest(String url, HashMap<String, String> pathVariables,HashMap<String, String> requestHeaders,
       HashMap<String, String> queryParams, Object body) throws Exception {
 
     request = RestAssured.given();
     request.given().filter(UtilityHooks.getLogFilter()).contentType(ContentType.JSON);
 
     endPointURL = new URL(DataMiner.refactor(url));
+
+    if (pathVariables != null) {
+      for (String key : pathVariables.keySet()) {
+        pathVariables.put(key, DataMiner.refactor(pathVariables.get(key)));
+      }
+
+      request.pathParams(pathVariables);
+    }
 
     if (queryParams != null) {
       for (String key : queryParams.keySet()) {

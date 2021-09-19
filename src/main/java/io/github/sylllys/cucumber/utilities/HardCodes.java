@@ -19,6 +19,7 @@ public class HardCodes {
   public static final String SUITE_CONFIG_DETAILS_KEYWORD = "suite.config.details";
 
   public static final String YAML_PATH_KEYWORD = "details ";
+  public static final String REQUEST_PATH_VARIABLE_KEYWORD = "path_var ";
   public static final String REQUEST_HEADER_KEYWORD = "header ";
   public static final String REQUEST_PARAMETER_KEYWORD = "param ";
   public static final String REQUEST_BODY_KEYWORD = "body ";

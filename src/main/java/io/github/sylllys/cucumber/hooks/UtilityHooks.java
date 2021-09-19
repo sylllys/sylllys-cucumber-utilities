@@ -40,4 +40,9 @@ public class UtilityHooks {
                     "\n\n-----API Response details-----" +
                     logFilter.getResponseBuilder());
   }
+
+  public static void logToReport(String message){
+
+    scenario.log(message);
+  }
 }

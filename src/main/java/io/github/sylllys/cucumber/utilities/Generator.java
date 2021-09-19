@@ -3,11 +3,9 @@ package io.github.sylllys.cucumber.utilities;
 import java.util.Date;
 import java.util.Random;
 import java.util.TimeZone;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.digest.DigestUtils;
 
 /*
- * code to generate random strings and numbers
+ * code to generate random timestamps, strings and numbers
  */
 public class Generator {
 

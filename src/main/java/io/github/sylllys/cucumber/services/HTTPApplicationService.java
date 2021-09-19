@@ -5,7 +5,7 @@ import io.github.sylllys.cucumber.endPoints.TestEndPointDetails;
 import io.github.sylllys.cucumber.endPoints.TestEndPointFactory;
 import io.github.sylllys.cucumber.utilities.DataMiner;
 import io.github.sylllys.cucumber.utilities.HardCodes;
-import java.util.HashMap;
+
 import java.util.List;
 
 public class HTTPApplicationService {
@@ -35,6 +35,14 @@ public class HTTPApplicationService {
     applicationTestEndpoint.initializePayload();
 
     for (String requestDetail : requestDetails) {
+
+      if (requestDetail.toUpperCase().startsWith(HardCodes.REQUEST_PATH_VARIABLE_KEYWORD.toUpperCase())) {
+
+        String[] pathVar = requestDetail.substring(HardCodes.REQUEST_PATH_VARIABLE_KEYWORD.length())
+                .split(":", 2);
+
+        testEndPointDetails.setPathVariable(pathVar[0], pathVar[1]);
+      }
 
       if (requestDetail.toUpperCase().startsWith(HardCodes.REQUEST_HEADER_KEYWORD.toUpperCase())) {
 

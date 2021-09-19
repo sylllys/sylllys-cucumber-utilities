@@ -5,7 +5,6 @@ import io.github.sylllys.cucumber.utilities.GlobalVariables;
 import io.github.sylllys.cucumber.utilities.JSONFactory;
 import io.restassured.http.Cookie;
 import io.restassured.http.Method;
-import io.restassured.response.Response;
 
 public class ApplicationTestEndpoint extends TestEndpoint {
 
@@ -31,7 +30,7 @@ public class ApplicationTestEndpoint extends TestEndpoint {
   @Override
   public void constructRequest() throws Exception {
 
-    super.constructRequest(endPointDetails.getUrl(), endPointDetails.getHeaders(),
+    super.constructRequest(endPointDetails.getUrl(), endPointDetails.getPath_variables(), endPointDetails.getHeaders(),
         endPointDetails.getParameters(), endPointDetails.getBody());
 
     if (endPointDetails.getCookies() != null && endPointDetails.getCookies().size() > 0) {
