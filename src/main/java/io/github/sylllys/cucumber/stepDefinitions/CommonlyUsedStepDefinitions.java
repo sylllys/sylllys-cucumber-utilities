@@ -1,23 +1,27 @@
 package io.github.sylllys.cucumber.stepDefinitions;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import io.github.sylllys.cucumber.bluePrints.PreviousTestEndpoint;
+import io.github.sylllys.cucumber.hooks.UtilityHooks;
 import io.github.sylllys.cucumber.utilities.DataMiner;
 import io.github.sylllys.cucumber.utilities.GlobalVariables;
 import io.github.sylllys.cucumber.utilities.JSONFactory;
-import io.github.sylllys.cucumber.bluePrints.PreviousTestEndpoint;
 import io.restassured.response.Response;
+
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class CommonlyUsedStepDefinitions {
 
   @Then("^print (.*)$")
   public void print(String text) throws Exception {
-    System.out.println(DataMiner.refactor(text));
+    text = DataMiner.refactor(text);
+    System.out.println(text);
+    UtilityHooks.logToReport(text);
   }
 
   @Given("^\\{global:(.*)\\} as (.*)$")
@@ -44,8 +48,8 @@ public class CommonlyUsedStepDefinitions {
 
     for (String tuple : tuples.split(regex)) {
 
-      String key = tuple.split("=", 2)[0];
-      String value = tuple.split("=", 2)[1].replace("\\,", ",");
+      String key = tuple.split(":", 2)[0];
+      String value = tuple.split(":", 2)[1].replace("\\,", ",");
 
       if (value.equalsIgnoreCase("does not exists") || value.equalsIgnoreCase("doesn't exists")) {
         assertFalse("JSON tuple:" + key + " exists",
